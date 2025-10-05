@@ -24,14 +24,25 @@
 ## Cada polígono convexo regular possui suas especificidades:
 
 ### **Triângulos:**
- - Menor polígono possível.
- - Área = 
+ - Polígono com menor número de lados possível.
+ - (A)rea = 
    - b.h/2 
    - b.c\*sen(alpha)/2 (triângulos retângulos)
    - l²*sqrt(3)/4
    - sqrt(p\*(p-a)\*(p-b)\*(p-c)) (Fórmula de Herão)
- - Semiperímetro = (a+b+c)/2
+ - Semi(p)erímetro = (a+b+c)/2
 
+### **Quadriláteros:**
+  - Paralelogramo: Dois pares de lados que são paralelos. (Quadrados e Losangos)
+    - Retângulos: Casos de Paralelogramos que só possuem ângulos retos.
+    - Losangos: Casos de Paralelogramos que possuem lados de mesma medida.
+    - Quadrados: Figuras que são Losangos e Retângulos.
+    *(A)rea = b\*h*
 
+    *(p)erimetro = 2\*(a+b)*
 
-
+  - Trapézios: Possuem apenas um par de lados paralelos.
+    - Retângulos: Possui ângulo reto.
+    - Isóceles: Os lados não paralelos (geralmente as retas da esquerda e da direita em boa parte das representações) são de tamanhos iguais.
+    - Escalenos: Todos os lados possuem comprimentos diferentes.
+  - Irregulares: Não possuem quaisquer tamanhos iguais.
