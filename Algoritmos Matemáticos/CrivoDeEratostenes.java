@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class crivo_de_eratostenes {
+public class CrivoDeEratostenes {
     public static void main(String[] args) {
         Scanner r = new Scanner(System.in);
         int l;
