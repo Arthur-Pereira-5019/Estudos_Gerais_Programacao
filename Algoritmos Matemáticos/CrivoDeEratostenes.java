@@ -9,11 +9,11 @@ public class CrivoDeEratostenes {
         l = r.nextInt();
         ArrayList<Integer> p = new ArrayList<>();
         ArrayList<Integer> s = new ArrayList<>();
-        for(int i = 0; i < l; i++) {
+        for(int i = 2; i <= l; i++) {
             p.add(i);
         }
 
-        for(int i = 2; i < p.size(); i++) {
+        for(int i = 0; i < p.size(); i++) {
             int c = p.get(i);
             s.add(c);
             for(int j = c; j < p.size(); j++) {
