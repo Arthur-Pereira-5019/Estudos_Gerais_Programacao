@@ -1,12 +1,37 @@
+import exception.VerticeDuplicado;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grafo<Dado,Identificador> {
+public class Grafo<Dado,Identificador,Peso> {
+    private TipoGrafo tipoGrafo;
     private ArrayList<? extends Aresta> arestas;
     private ArrayList<Vertice<Dado, Identificador>> vertices = new ArrayList<>();
 
+    private Grafo(TipoGrafo tg) {
+        switch (tg) {
+            case ARESTA_BIDIRECIONAL:
+                arestas = new ArrayList<ArestaBidirecional>();
+                break;
+            case ARESTA_BIDIRECIONAL_COM_PESO:
+                arestas = new ArrayList<ArestaBidirecionalComPeso<Peso>>();
+                break;
+            case ARESTA_UNIDIRECIONAL:
+                arestas = new ArrayList<ArestaUnidirecional>();
+                break;
+            case ARESTA_UNIDIRECIONAL_COM_PESO:
+                arestas = new ArrayList<ArestaUnidirecionalComPeso<Peso>>();
+                break;
+        }
+        tipoGrafo = tg;
+    }
+
     public void addVertice(Vertice<Dado, Identificador> v) {
-        vertices.add(v);
+        if(procurarVerticePeloId(v.getId()) == null) {
+            vertices.add(v);
+        } else {
+            throw new VerticeDuplicado("Vértice já existente com id " + v.getId());
+        }
     }
 
     public ArrayList<Vertice<Dado, Identificador>> getVertices() {
@@ -20,7 +45,21 @@ public class Grafo<Dado,Identificador> {
     public void conectar(Identificador i1, Identificador i2) {
         Vertice v1 = procurarVerticePeloId(i1);
         Vertice v2 = procurarVerticePeloId(i2);
-        
+        Aresta a;
+        if(tipoGrafo == TipoGrafo.ARESTA_BIDIRECIONAL) {
+            a = new ArestaBidirecional(v1,v2);
+        } else if(tipoGrafo == TipoGrafo.ARESTA_UNIDIRECIONAL_COM_PESO) {
+            a = new ArestaBidirecional(v1,v2);
+        } else if(tipoGrafo == TipoGrafo.ARESTA_UNIDIRECIONAL) {
+            a = new ArestaBidirecional(v1,v2);
+        } else  {
+            a = new ArestaBidirecional(v1,v2);
+        }
+        addToList(arestas,a);
+    }
+
+    private <T extends Aresta> void addToList(List<T> list, T item) {
+        list.add(item);
     }
 
     public Vertice<?,?> procurarVerticePeloId(Identificador id) {
@@ -32,27 +71,4 @@ public class Grafo<Dado,Identificador> {
         return null;
     }
 
-    public static <D, I> Grafo<?, ?> novoGrafoUnidirecional(D dado, I id) {
-        Grafo<?, ?> g = new Grafo<D, I>();
-        g.arestas = new ArrayList<ArestaUnidirecional>();
-        return g;
-    }
-
-    public static <D, I, P> Grafo<?, ?> novoGrafoUnidirecionalComPeso(D dado, I id, P peso) {
-        Grafo<?, ?> g = new Grafo<D, I>();
-        g.arestas = new ArrayList<ArestaUnidirecionalComPeso<P>>();
-        return g;
-    }
-
-    public static <D, I> Grafo<?, ?> novoGrafoBidirecional(D dado, I id) {
-        Grafo<?, ?> g = new Grafo<D, I>();
-        g.arestas = new ArrayList<ArestaBidirecional>();
-        return g;
-    }
-
-    public static <D, I, P> Grafo<?, ?> novoGrafoBidirecionalComPeso(D dado, I id, P peso) {
-        Grafo<?, ?> g = new Grafo<D, I>();
-        g.arestas = new ArrayList<ArestaBidirecionalComPeso<P>>();
-        return g;
-    }
 }
