@@ -1,74 +1,95 @@
-import exception.VerticeDuplicado;
-
+import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Grafo<Dado,Identificador,Peso> {
-    private TipoGrafo tipoGrafo;
-    private ArrayList<? extends Aresta> arestas;
-    private ArrayList<Vertice<Dado, Identificador>> vertices = new ArrayList<>();
+public class Grafo<T,I> {
+    private T[][] matrizDeAdjacencia;
+    private Class<T> tipo;
+    private Map<I, Integer> identificadores = new HashMap<>();
 
-    private Grafo(TipoGrafo tg) {
-        switch (tg) {
-            case ARESTA_BIDIRECIONAL:
-                arestas = new ArrayList<ArestaBidirecional>();
-                break;
-            case ARESTA_BIDIRECIONAL_COM_PESO:
-                arestas = new ArrayList<ArestaBidirecionalComPeso<Peso>>();
-                break;
-            case ARESTA_UNIDIRECIONAL:
-                arestas = new ArrayList<ArestaUnidirecional>();
-                break;
-            case ARESTA_UNIDIRECIONAL_COM_PESO:
-                arestas = new ArrayList<ArestaUnidirecionalComPeso<Peso>>();
-                break;
-        }
-        tipoGrafo = tg;
+    public Grafo(GrafoBuilder<T,I> builder) {
+        tipo = builder.getTipo();
+        matrizDeAdjacencia = builder.getMatrizDeAdjacencia();
     }
 
-    public void addVertice(Vertice<Dado, Identificador> v) {
-        if(procurarVerticePeloId(v.getId()) == null) {
-            vertices.add(v);
-        } else {
-            throw new VerticeDuplicado("Vértice já existente com id " + v.getId());
+    public void conectar(int id1, int id2, boolean bidirecional, T peso) {
+        if(id1 > matrizDeAdjacencia.length | id2 > matrizDeAdjacencia.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        matrizDeAdjacencia[id1][id2] = peso;
+        if(bidirecional) {
+            matrizDeAdjacencia[id2][id1] = peso;
         }
     }
-
-    public ArrayList<Vertice<Dado, Identificador>> getVertices() {
-        return vertices;
-    }
-
-    public ArrayList<? extends Aresta> getArestas() {
-        return arestas;
-    }
-
-    public void conectar(Identificador i1, Identificador i2) {
-        Vertice v1 = procurarVerticePeloId(i1);
-        Vertice v2 = procurarVerticePeloId(i2);
-        Aresta a;
-        if(tipoGrafo == TipoGrafo.ARESTA_BIDIRECIONAL) {
-            a = new ArestaBidirecional(v1,v2);
-        } else if(tipoGrafo == TipoGrafo.ARESTA_UNIDIRECIONAL_COM_PESO) {
-            a = new ArestaBidirecional(v1,v2);
-        } else if(tipoGrafo == TipoGrafo.ARESTA_UNIDIRECIONAL) {
-            a = new ArestaBidirecional(v1,v2);
-        } else  {
-            a = new ArestaBidirecional(v1,v2);
-        }
-        addToList(arestas,a);
-    }
-
-    private <T extends Aresta> void addToList(List<T> list, T item) {
-        list.add(item);
-    }
-
-    public Vertice<?,?> procurarVerticePeloId(Identificador id) {
-        for(Vertice<?,?> v: vertices) {
-            if(v.getId() == id) {
-                return v;
+    
+    public String toString() {
+        StringBuilder resultado = new StringBuilder();
+        int length = matrizDeAdjacencia.length;
+        for(int i = 0; i < length;i++) {
+            for(int j = 0; j < length; j++) {
+                resultado.append(" ").append(matrizDeAdjacencia[i][j]);
             }
+            resultado.append("\n");
         }
-        return null;
+        return resultado.toString();
     }
 
+    public static <t,id> GrafoBuilder<t,id> builder(Class<t> tipo, int s, Class<id> identificador) {
+        return new GrafoBuilder<t,id>(tipo, s);
+    }
+
+    public static class GrafoBuilder<T,I> {
+        private T[][] matrizDeAdjacencia;
+        private Class<T> tipo;
+        private Class<I> identificador;
+        private Map<I, Integer> identificadores = new HashMap<>();
+
+        public GrafoBuilder(Class<T> tipo, int s, Class<I> identificador) {
+            this.tipo = tipo;
+            this.identificador = identificador;
+            matrizDeAdjacencia = (T[][]) Array.newInstance(tipo, s, s);
+        }
+
+        public Grafo<T, I> build() {
+            return new Grafo<>(this);
+        }
+
+        public T[][] getMatrizDeAdjacencia() {
+            return matrizDeAdjacencia;
+        }
+
+        public void setMatrizDeAdjacencia(T[][] matrizDeAdjacencia) {
+            this.matrizDeAdjacencia = matrizDeAdjacencia;
+        }
+
+        public Class<T> getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(Class<T> tipo) {
+            this.tipo = tipo;
+        }
+
+        public GrafoBuilder<T, I> preenchidoCom(T objeto) {
+            for (int i = 0; i < matrizDeAdjacencia.length; i++) {
+                for (int j = 0; j < matrizDeAdjacencia.length; j++) {
+                    matrizDeAdjacencia[i][j] = objeto;
+                }
+            }
+            return this;
+        }
+
+        public GrafoBuilder<T,I> tentarGerarIdentificacao() {
+            if(tipo.equals(Integer.class)) {
+                for(int i = 0; i < matrizDeAdjacencia.length; i++) {
+                    identificadores.put(i,i);
+                }
+            }
+
+            return this;
+        }
+    }
 }
