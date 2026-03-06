@@ -37,8 +37,8 @@ public class Grafo<T,I> {
         return resultado.toString();
     }
 
-    public static <t,id> GrafoBuilder<t,id> builder(Class<t> tipo, int s, Class<id> identificador) {
-        return new GrafoBuilder<t,id>(tipo, s);
+    public static <t,id> GrafoBuilder<t,id> builder(Class<t> tipo, int tamanho, Class<id> identificador) {
+        return new GrafoBuilder<t,id>(tipo, tamanho, identificador);
     }
 
     public static class GrafoBuilder<T,I> {
@@ -84,8 +84,8 @@ public class Grafo<T,I> {
 
         public GrafoBuilder<T,I> tentarGerarIdentificacao() {
             if(tipo.equals(Integer.class)) {
-                for(int i = 0; i < matrizDeAdjacencia.length; i++) {
-                    identificadores.put(i,i);
+                for(Integer i = 0; i < matrizDeAdjacencia.length; i++) {
+                    identificadores.put((I) i,i);
                 }
             }
 
