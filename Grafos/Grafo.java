@@ -9,6 +9,7 @@ public class Grafo<T,I> {
     private T[][] matrizDeAdjacencia;
     private Class<T> tipo;
     private Map<I, Integer> identificadores = new HashMap<>();
+    private String idBase = "x";
 
     public Grafo(GrafoBuilder<T,I> builder) {
         tipo = builder.getTipo();
@@ -27,6 +28,10 @@ public class Grafo<T,I> {
     
     public String toString() {
         StringBuilder resultado = new StringBuilder();
+     /*   if(!identificadores.isEmpty()) {
+            System.out.println(idBase);
+            identificadores.forEach();
+        }*/
         int length = matrizDeAdjacencia.length;
         for(int i = 0; i < length;i++) {
             for(int j = 0; j < length; j++) {
