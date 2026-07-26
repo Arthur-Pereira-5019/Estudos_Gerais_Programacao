@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Algoritmos Matemáticos" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Programação Dinâmica" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Grafos" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Estruturas de Dados" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
